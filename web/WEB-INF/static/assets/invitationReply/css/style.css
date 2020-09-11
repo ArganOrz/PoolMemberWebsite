@@ -1,0 +1,12 @@
+.reply-box{
+    width: 700px;
+    height: auto;
+    margin: 20px auto 0;
+}
+.theme{
+    width: 700px;
+    height: auto;
+    padding-bottom: 3px;
+    border-bottom: 2px solid #CDCDCD;
+    margin: 0 auto;
+}

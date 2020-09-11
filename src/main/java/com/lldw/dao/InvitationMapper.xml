@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lldw.dao.InvitationMapper">
+    <select id="queryInvitationsByPageLimit" resultType="Invitation">
+        select iid, MEMBER_CODE, POSTTIME, THEME  from
+            (SELECT rownum n, iid, MEMBER_CODE, POSTTIME, THEME from INVITATION WHERE ROWNUM &lt;= #{max})
+        WHERE n &gt;= #{min}
+
+    </select>
+
+    <select id="queryTotalCountOfInvitation" resultType="int">
+        select count(*) from invitation
+    </select>
+
+    <insert id="addInvitation">
+        insert into invitation(member_Code, posttime, THEME) VALUES (#{member_Code}, TO_DATE(#{time},'YYYY-MM-DD HH24:MI:SS'), #{theme})
+    </insert>
+
+    <select id="queryInvitationIidByMemberCodeAndTime"  resultType="int">
+        select invitation.iid from invitation
+        where member_Code=#{member_Code} and invitation.posttime = TO_DATE(#{time},'YYYY-MM-DD HH24:MI:SS')
+    </select>
+
+    <insert id="addInvitationReply">
+        insert into invitationreply(iid, member_Code, replytime, content, flor)
+        values (#{iid}, #{member_Code},  TO_DATE(#{time},'YYYY-MM-DD HH24:MI:SS'), #{content}, #{floor})
+    </insert>
+
+
+    <select id="queryInvitationReplyByIidWithOrder" resultType="InvitationReply">
+        select * from invitationreply where iid=#{iid} order by invitationreply.flor
+    </select>
+
+    <select id="queryMaxFlorByIid" resultType="int">
+        select max(invitationreply.flor) from invitationreply where invitationreply.iid = #{iid}
+    </select>
+
+    <select id="queryFirstContentByIid" resultType="String" parameterType="int">
+        select CONTENT from invitationreply where iid = #{iid} and flor = 1
+    </select>
+
+    <select id="queryInvitationThemeByIid" resultType="String">
+        select invitation.theme from invitation where iid=#{iid}
+    </select>
+
+    <select id="queryTotalCountOfInvitationReplyByIid" resultType="int">
+        select count(*) from invitationreply where iid=#{iid}
+    </select>
+
+    <delete id="deleteInvitationReplyByRid" parameterType="String">
+        delete from invitationreply where invitationreply.rid=#{rid}
+    </delete>
+
+    <select id="queryInvitationsByPageAndContentCondition" resultType="Invitation">
+        select * from invitation where invitation.theme like '%${content}%' limit  #{min}, #{max}
+    </select>
+
+    <select id="queryInvitationsOfMemberByMemberCode" resultType="Invitation">
+        select * from invitation where member_Code=#{member_Code}
+    </select>
+
+    <delete id="deleteInvitationByIid" parameterType="String">
+
+        delete from invitation where invitation.iid=#{iid}
+    </delete>
+
+    <delete id="deleteInvitationRepliesByIid" parameterType="String">
+        delete from invitationreply where invitationreply.iid=#{iid}
+    </delete>
+</mapper>

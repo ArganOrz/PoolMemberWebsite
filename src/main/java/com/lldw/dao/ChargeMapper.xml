@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lldw.dao.ChargeMapper">
+
+    <select id="queryChargesOfMemberByMemberCode" resultType="Charge">
+        select charge.CHARGE_CODE, charge.PRICE,charge.TIME,charge.balance
+        from CHARGE where charge.MEMBER_CODE = #{member_Code}
+
+    </select>
+
+    <select id="queryConsumesOfMemberByTimeRange" resultType="Charge">
+        select charge.CHARGE_CODE, charge.PRICE,charge.TIME,charge.balance
+        from CHARGE where charge.MEMBER_CODE = #{member_Code} and
+            charge.TIME between TO_DATE(#{startTime},'YYYY-MM-DD HH24:MI:SS')
+                and TO_DATE(#{endTime},'YYYY-MM-DD HH24:MI:SS')
+
+    </select>
+
+ </mapper>
